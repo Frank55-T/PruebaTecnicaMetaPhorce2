@@ -1,0 +1,234 @@
+openapi: 3.0.1
+info:
+  title: Human Resources API of Methaporce created by Francisco Guzmán Villagómez.
+  description: This api manages the information of the employees and their contracts with Metaphorce
+  version: 1.0.0
+servers:
+- url: http://localhost:8080
+tags:
+- name: employees
+  description: Manages the information of Metaphorce's Employees
+
+paths:
+
+  /addEmployee:
+    post:
+      tags:
+      - employees
+      summary: Inserts a new employee in BD
+      parameters:
+      - $ref: '#/components/parameters/token'
+  
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyEmployeesPost'
+        required: true
+      responses:
+        200:
+          description: (OK) The employee was saved succesfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+  /updateEmployee:
+    put:
+      tags:
+      - employees
+      summary: Updates an employee in BD
+      parameters:
+      - $ref: '#/components/parameters/token'
+  
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyEmployeesPost'
+        required: true
+      responses:
+        200:
+          description: (OK) The employee was updated succesfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+    
+  /delete/{id}:
+    delete:
+      tags:
+      - employees
+      summary: Deletes an employee from the BD
+      parameters:
+      - $ref: '#/components/parameters/token'
+      - name: id
+        in: path
+        description: Employee's id to eliminate
+        required: true
+        schema:
+          type: integer
+        
+      responses:
+        200:
+          description: (OK) The employee was successfully deleted
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+  /employees:
+    get:
+      tags:
+      - employees
+      summary: Returns a list of the employees of the company
+      parameters:
+      - $ref: '#/components/parameters/token'
+      
+        
+      responses:
+        200:
+          description: (OK) The list of employees was retrieved successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /employees/active:
+    get:
+      tags:
+      - employees
+      summary: Returns a list of the employees of the company whose contracts are active
+      parameters:
+      - $ref: '#/components/parameters/token'
+      
+        
+      responses:
+        200:
+          description: (OK) The list of employees was retrieved successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+          
+  /employees/{id}:
+    get:
+      tags:
+      - employees
+      summary: Returns an employee from the BD with an specific id
+      parameters:
+      - $ref: '#/components/parameters/token'
+      - name: id
+        in: path
+        description: Employee's id to get information about
+        required: true
+        schema:
+          type: integer
+        
+      responses:
+        200:
+          description: (OK) The employee was retrieved succesfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+  
+  /Contracts:
+    get:
+      tags:
+      - Contracts
+      summary: Returns a list of the contracts of the company
+      parameters:
+      - $ref: '#/components/parameters/token'
+      
+        
+      responses:
+        200:
+          description: (OK) The list of contracts was retrieved successfully
+        400:
+          $ref: '#/components/responses/BadRequest'
+        401:
+          $ref: '#/components/responses/Unauthorized' 
+        404:
+          $ref: '#/components/responses/NotFound'
+        500:
+          $ref: '#/components/responses/ServerError'
+components:
+  responses:
+    
+    Unauthorized:
+      description: (Unauthorized) There is no authotization to use the service
+    
+    NotFound:
+      description: (NotFound) The information could not be retrieved 
+    
+    BadRequest:
+      description: (Bad Request) The data sent is incorrect or there is mandatory information that was not sent
+      
+    ServerError:
+      description: Internal Server Error (MySQL)
+        
+
+  parameters:
+    token:
+      in: header
+      name: token
+      description: Token de autenticaciÃ³n en API.
+      required: false
+      schema:
+        type: string
+    
+
+  schemas:
+
+    BodyEmployeesPost:
+      type: object
+      properties:
+        employeeid:
+          type: integer
+          description: ID of employee
+        name:
+          type: string
+          description: Employee's name
+        lastname:
+          type: string
+          description: Employee's lastname
+        birthdate:
+          type: string
+          description: Employee's birthdate
+        email:
+          type: string
+          description: Employee's email
+        cellphone:
+          type: number
+          description: Employee's cellphone number
+        contracttype:
+          type: integer
+          description: Employee's contract type
+        isActive:
+          type: integer
+          description: Employee's status of its contract
